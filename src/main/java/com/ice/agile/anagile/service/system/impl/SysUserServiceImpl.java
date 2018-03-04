@@ -2,6 +2,7 @@ package com.ice.agile.anagile.service.system.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.ice.agile.anagile.common.constant.Constant;
+import com.ice.agile.anagile.common.enums.CodeEnums;
 import com.ice.agile.anagile.entity.system.SysUser;
 import com.ice.agile.anagile.mapper.system.SysUserMapper;
 import com.ice.agile.anagile.service.system.SysUserService;
@@ -19,6 +20,7 @@ import java.util.List;
  * 2018/2/27 10:16
  */
 @Service
+@SystemServiceLog(type = 5,name = "用户管理")
 public class SysUserServiceImpl implements SysUserService {
 
     @Autowired
@@ -31,10 +33,9 @@ public class SysUserServiceImpl implements SysUserService {
     }
 
     @Override
-    @SystemServiceLog(type = 5,name = "用户管理")
     public SysUser findById(Integer id) {
         if (StringUtils.isEmpty(id)) {
-            throw new MyExecption(3,"id不能为空");
+            throw new MyExecption(CodeEnums.PARAM_ISNOLL.getCode(),"id不能为空");
         }
         return sysUserMapper.selectById(id);
     }

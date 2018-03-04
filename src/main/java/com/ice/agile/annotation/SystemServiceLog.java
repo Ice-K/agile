@@ -6,7 +6,7 @@ import java.lang.annotation.*;
  * Cteated by wangpeng
  * 2018/3/2 11:35
  */
-@Target(ElementType.METHOD)
+@Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface SystemServiceLog {
