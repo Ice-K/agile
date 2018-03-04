@@ -34,18 +34,19 @@ public class LogAspect {
      */
     //@Pointcut(value = "@annotation(com.ice.agile.annotation.SystemServiceLog)")
     @Pointcut(value = "execution(public * com.ice.agile.anagile.service..impl.*ServiceImpl.save*(..))")
-    public void serviceSaveLog() {}
+    private void serviceSaveLog() {}
 
     /**
      *Service层修改操作切点
      */
     @Pointcut(value = "execution(public * com.ice.agile.anagile.service..impl.*ServiceImpl.update*(..))")
-    public void serviceUpdateLog() {}
+    private void serviceUpdateLog() {}
 
     /**
      *Service层删除操作切点
      */
-    public void serviceDeleteLog() {}
+    @Pointcut(value = "execution(public * com.ice.agile.anagile.service..impl.*ServiceImpl.del*(..))")
+    private void serviceDeleteLog() {}
 
 
     /**
@@ -103,10 +104,10 @@ public class LogAspect {
             return null;
         }
 
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         //sb格式 方法名[参数1，类型：String，值："abc"][参数2，........]
         sb.append(mName);
-        String className = null;
+        String className;
         int index = 1;
         //1.便利参数对象
         for (Object info : args) {
@@ -123,7 +124,7 @@ public class LogAspect {
                     continue;//执行下一次循环
                 }
                 //5.获取值
-                Object reValue = null;
+                Object reValue;
                 try {
                     reValue = method.invoke(info);
                 } catch (Exception e) {

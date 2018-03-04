@@ -2,10 +2,9 @@ package com.ice.agile.anagile.controller.system;
 
 
 import com.ice.agile.anagile.common.enums.CodeEnums;
-import com.ice.agile.anagile.entity.system.SysUser;
-import com.ice.agile.anagile.entity.system.SystemActionLogger;
-import com.ice.agile.anagile.service.system.SysUserService;
 import com.ice.agile.anagile.common.vo.ResultVO;
+import com.ice.agile.anagile.entity.system.SysUser;
+import com.ice.agile.anagile.service.system.SysUserService;
 import com.ice.agile.utils.HttpIpUtil;
 import com.ice.agile.utils.ResultUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,11 +29,7 @@ public class SysUserController {
 
     @PostMapping(value = "/login")
     public ResultVO login(SysUser user, HttpServletRequest request) {
-        SysUser currentUser = new SysUser();
-        currentUser.setId(111);
-        currentUser.setUsername("admin");
-        currentUser.setPassword("");
-        //SysUser currentUser = sysUserService.findById(user.getId());
+        SysUser currentUser = sysUserService.findById(user.getId());
         if (currentUser == null) {
             return ResultUtils.error(CodeEnums.RESULT_ERROR.getCode(),"用户不存在");
         }
