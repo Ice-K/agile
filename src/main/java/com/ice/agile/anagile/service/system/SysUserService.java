@@ -14,7 +14,7 @@ public interface SysUserService {
 
     SysUser findById(Integer id);
 
-    int add(SysUser user);
+    int save(SysUser user);
 
     int delete(Integer id);
 

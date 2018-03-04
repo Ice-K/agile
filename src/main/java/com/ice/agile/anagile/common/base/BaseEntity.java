@@ -14,10 +14,10 @@ public class BaseEntity implements Serializable {
     private static final long serialVersionUID = 2203613343377335393L;
 
     private Timestamp createTime; //创建时间
-    private String createUser;  //创建人
+    private String createUser;    //创建人
     private Timestamp updateTime; //修改时间
-    private String updateUser;  //修改人
-    private Integer isDel = 0;      //是否删除  0未删除  1以删除
+    private String updateUser;    //修改人
+    private Integer isDel = 0;    //是否删除  0未删除  1已经删除
 
 
     public Integer getIsDel() {

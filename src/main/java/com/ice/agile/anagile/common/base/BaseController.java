@@ -16,7 +16,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * @ControllerAdvice:
+ * @ ControllerAdvice:
  * 是spring3.2提供的新注解，从名字上可以看出大体意思是控制器增强。
  * 即把@ControllerAdvice注解内部使用：@ExceptionHandler、@InitBinder、@ModelAttribute
  * 注解的方法应用到所有的 @RequestMapping注解的方法。

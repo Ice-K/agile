@@ -6,6 +6,7 @@ import com.ice.agile.anagile.entity.system.SysUser;
 import com.ice.agile.anagile.entity.system.SystemActionLogger;
 import com.ice.agile.anagile.service.system.SysUserService;
 import com.ice.agile.anagile.common.vo.ResultVO;
+import com.ice.agile.utils.HttpIpUtil;
 import com.ice.agile.utils.ResultUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,13 +30,16 @@ public class SysUserController {
 
     @PostMapping(value = "/login")
     public ResultVO login(SysUser user, HttpServletRequest request) {
-        SysUser currentUser = sysUserService.findById(user.getId());
+        SysUser currentUser = new SysUser();
+        currentUser.setId(111);
+        currentUser.setUsername("admin");
+        currentUser.setPassword("");
+        //SysUser currentUser = sysUserService.findById(user.getId());
         if (currentUser == null) {
             return ResultUtils.error(CodeEnums.RESULT_ERROR.getCode(),"用户不存在");
         }
 
-        String ip = request.getRemoteAddr();
-        currentUser.setLoginIp(ip);
+        currentUser.setLoginIp(HttpIpUtil.getRequestIp(request));
         request.getSession().setAttribute("currentUser", currentUser);
 
         return ResultUtils.success("登录成功");
@@ -49,7 +53,7 @@ public class SysUserController {
 
     @PostMapping(value = "/addUser")
     public int addUser(SysUser user) {
-        return sysUserService.add(user);
+        return sysUserService.save(user);
     }
 
     @PostMapping(value = "/updateUser")

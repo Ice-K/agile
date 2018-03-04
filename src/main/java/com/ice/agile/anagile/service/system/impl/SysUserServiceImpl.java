@@ -1,12 +1,11 @@
 package com.ice.agile.anagile.service.system.impl;
 
 import com.github.pagehelper.PageHelper;
-import com.ice.agile.anagile.common.constant.Constant;
 import com.ice.agile.anagile.common.enums.CodeEnums;
 import com.ice.agile.anagile.entity.system.SysUser;
 import com.ice.agile.anagile.mapper.system.SysUserMapper;
 import com.ice.agile.anagile.service.system.SysUserService;
-import com.ice.agile.annotation.SystemServiceLog;
+import com.ice.agile.annotation.AutomaticLog;
 import com.ice.agile.execption.MyExecption;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,7 +19,7 @@ import java.util.List;
  * 2018/2/27 10:16
  */
 @Service
-@SystemServiceLog(type = 5, name = "用户管理")
+@AutomaticLog(name = "用户管理")
 public class SysUserServiceImpl implements SysUserService {
 
     @Autowired
@@ -42,8 +41,9 @@ public class SysUserServiceImpl implements SysUserService {
 
     @Override
     @Transactional
-    public int add(SysUser user) {
-        return sysUserMapper.insert(user);
+    public int save(SysUser user) {
+        return 1;
+        //return sysUserMapper.insert(user);
     }
 
     @Override
