@@ -20,7 +20,7 @@ import java.util.List;
  * 2018/2/27 10:16
  */
 @Service
-@SystemServiceLog(type = 5,name = "用户管理")
+@SystemServiceLog(type = 5, name = "用户管理")
 public class SysUserServiceImpl implements SysUserService {
 
     @Autowired

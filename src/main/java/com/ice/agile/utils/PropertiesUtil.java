@@ -17,14 +17,14 @@ public class PropertiesUtil {
     private static Properties properties = new Properties();
 
     static {
-        log.info("System ===> 加载配置文件...");
+        log.info("System ===> 配置文件开始加载...");
         try {
             properties.load(new InputStreamReader(PropertiesUtil.class.getClassLoader().getResourceAsStream("config.properties"), "UTF-8"));
         } catch (IOException e) {
             e.printStackTrace();
-            log.error("System ===> 加载配置文件失败！msg："+e.getMessage());
+            log.error("System ===> 配置文件加载失败！msg："+e.getMessage());
         }
-        log.info("System ===> 加载配置文件成功");
+        log.info("System ===> 配置文件加载成功！");
     }
 
     /**
