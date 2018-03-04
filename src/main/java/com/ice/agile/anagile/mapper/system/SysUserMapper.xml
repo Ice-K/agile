@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ice.agile.anagile.mapper.system.SysUserMapper" >
+  <resultMap id="BaseResultMap" type="com.ice.agile.anagile.entity.system.SysUser" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="pid" property="pid" jdbcType="INTEGER" />
+    <result column="username" property="username" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="CHAR" />
+    <result column="deptment_id" property="deptmentId" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="create_user" property="createUser" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="update_user" property="updateUser" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, pid, username, password, name, phone, deptment_id, create_time, create_user, 
+    update_time, update_user
+  </sql>
+  <sql id="where">
+    <where>
+      <if test="phone != null and phone != ''">
+        AND phone = #{phone}
+      </if>
+      <if test="name != null and name != ''">
+        AND name LIKE CONCAT(CONCAT('%',#{name }),'%')
+      </if>
+      <if test="createTime != null">
+        AND create_time >= #{createTime}
+      </if>
+    </where>
+  </sql>
+  <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_user
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="queryByParams" resultMap="BaseResultMap" parameterType="com.ice.agile.anagile.entity.system.SysUser">
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM sys_user
+    <include refid="where"/>
+    ORDER BY create_time DESC
+  </select>
+  <delete id="deleteById" parameterType="java.lang.Integer" >
+    delete from sys_user
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ice.agile.anagile.entity.system.SysUser" >
+    insert into sys_user (id, pid, username, 
+      password, name, phone, 
+      deptment_id, create_time, create_user, 
+      update_time, update_user)
+    values (#{id,jdbcType=INTEGER}, #{pid,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, 
+      #{password,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{phone,jdbcType=CHAR}, 
+      #{deptmentId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR},
+      #{updateTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR})
+  </insert>
+
+  <update id="updateById" parameterType="com.ice.agile.anagile.entity.system.SysUser" >
+    update sys_user
+    set pid = #{pid,jdbcType=INTEGER},
+      username = #{username,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=CHAR},
+      deptment_id = #{deptmentId,jdbcType=INTEGER},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
