@@ -33,6 +33,7 @@ public class ServiceLogAspect {
 
 
 
+
     @AfterReturning(value = "ServiceLog()", argNames = "joinPoint,object", returning = "object")
     public void insertLog(JoinPoint joinPoint, Object object) {
 
