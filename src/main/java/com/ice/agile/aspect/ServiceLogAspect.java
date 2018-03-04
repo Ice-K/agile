@@ -18,7 +18,7 @@ import java.sql.Timestamp;
 import java.util.Date;
 
 /**
- * AOP处理
+ * AOP处理service层日志记录
  * Cteated by wangpeng
  * 2018/3/1 19:12
  */
