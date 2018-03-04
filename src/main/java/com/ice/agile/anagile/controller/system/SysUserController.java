@@ -36,7 +36,6 @@ public class SysUserController {
 
         currentUser.setLoginIp(HttpIpUtil.getRequestIp(request));
         request.getSession().setAttribute("currentUser", currentUser);
-
         return ResultUtils.success("登录成功");
     }
 
