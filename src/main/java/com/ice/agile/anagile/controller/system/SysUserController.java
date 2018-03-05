@@ -6,7 +6,7 @@ import com.ice.agile.anagile.common.vo.ResultVO;
 import com.ice.agile.anagile.entity.system.SysUser;
 import com.ice.agile.anagile.service.system.SysUserService;
 import com.ice.agile.utils.HttpIpUtil;
-import com.ice.agile.utils.ResultUtils;
+import com.ice.agile.utils.ResultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,17 +31,17 @@ public class SysUserController {
     public ResultVO login(SysUser user, HttpServletRequest request) {
         SysUser currentUser = sysUserService.findById(user.getId());
         if (currentUser == null) {
-            return ResultUtils.error(CodeEnums.RESULT_ERROR.getCode(),"用户不存在");
+            return ResultUtil.error(CodeEnums.RESULT_ERROR.getCode(),"用户不存在");
         }
 
         currentUser.setLoginIp(HttpIpUtil.getRequestIp(request));
         request.getSession().setAttribute("currentUser", currentUser);
-        return ResultUtils.success("登录成功");
+        return ResultUtil.success("登录成功");
     }
 
     @GetMapping(value = "/getUser")
     public ResultVO getUser(Integer id) {
-        return ResultUtils.success(sysUserService.findById(id));
+        return ResultUtil.success(sysUserService.findById(id));
     }
 
 

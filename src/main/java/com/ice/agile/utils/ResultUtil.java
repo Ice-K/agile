@@ -8,7 +8,7 @@ import com.ice.agile.anagile.common.vo.ResultVO;
  * Cteated by wangpeng
  * 2018/3/1 17:21
  */
-public class ResultUtils {
+public class ResultUtil {
 
     /**
      * 执行成功且有数据返回

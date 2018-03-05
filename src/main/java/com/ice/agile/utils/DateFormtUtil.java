@@ -8,11 +8,11 @@ import java.util.Date;
  * Cteated by wangpeng
  * 2018/2/26 16:06
  */
-public class DateFormtUtils {
+public class DateFormtUtil {
 
     /**
      * 获取精确到秒的时间戳
-     * @return
+     * @return 时间戳
      */
     public static int getSecondTimestamp() {
         Date now = new Date();
@@ -22,11 +22,11 @@ public class DateFormtUtils {
 
     /**
      * 获取精确到毫秒的时间戳
-     * @return
+     * @return 时间戳
      */
     public static long getTimestamp() {
         Date now = new Date();
-        return Long.valueOf(now.getTime());
+        return now.getTime();
     }
 
 }

@@ -4,7 +4,7 @@ import com.ice.agile.anagile.common.vo.ResultVO;
 import com.ice.agile.configuration.DateAndTimestampConfig.CustomTimestampEditor;
 import com.ice.agile.configuration.DateAndTimestampConfig.StringEscapeEditor;
 import com.ice.agile.execption.MyExecption;
-import com.ice.agile.utils.ResultUtils;
+import com.ice.agile.utils.ResultUtil;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -55,9 +55,9 @@ public class BaseController {
     public ResultVO execptionHandler(Exception e) {
         if (e instanceof MyExecption) {
             MyExecption execption = (MyExecption) e;
-            return ResultUtils.error(execption.getCode(),execption.getMessage());
+            return ResultUtil.error(execption.getCode(),execption.getMessage());
         } else {
-            return ResultUtils.error(-1, "未知错误");
+            return ResultUtil.error(-1, "未知错误");
         }
     }
 }
