@@ -12,7 +12,7 @@ public interface SysUserMapper {
 
     SysUser selectById(Integer id);
 
-    List<SysUser> queryByParams(SysUser user);
+    List<SysUser> selectByQuery(SysUser user);
 
     int updateById(SysUser user);
 

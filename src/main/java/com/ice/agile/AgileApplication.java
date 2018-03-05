@@ -7,7 +7,7 @@ import org.springframework.boot.web.servlet.ServletComponentScan;
 
 @SpringBootApplication
 @ServletComponentScan// 设置启动时spring能够扫描到我们自己编写的servlet和filter, 用于Druid监控
-@MapperScan("com.ice.agile.**.mapper")// 用于扫描mapper接口
+@MapperScan("com.ice.agile.anagile.**.mapper")// 用于扫描mapper接口
 public class AgileApplication {
 
 	public static void main(String[] args) {

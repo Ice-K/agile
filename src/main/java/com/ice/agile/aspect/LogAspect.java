@@ -1,8 +1,9 @@
 package com.ice.agile.aspect;
 
 import com.ice.agile.anagile.common.constant.Constant;
+import com.ice.agile.anagile.entity.system.SysActionLogger;
 import com.ice.agile.anagile.entity.system.SysUser;
-import com.ice.agile.anagile.entity.system.SystemActionLogger;
+import com.ice.agile.anagile.service.system.SysActionLoggerService;
 import com.ice.agile.annotation.AutomaticLog;
 import com.ice.agile.utils.AppUser;
 import org.aspectj.lang.JoinPoint;
@@ -11,6 +12,7 @@ import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
@@ -26,8 +28,20 @@ import java.util.Date;
 @Component
 public class LogAspect {
 
+    @Autowired
+    private SysActionLoggerService sysActionLoggerService;
 
+    /**
+     * 登录操作切点
+     */
+    @Pointcut(value = "execution(public * com.ice.agile.anagile.controller..login(..))")
+    private void controllerLoginLog() {}
 
+    /**
+     * 退出操作切点
+     */
+    @Pointcut(value = "execution(public * com.ice.agile.anagile.controller..loginout(..))")
+    private void controllerLogoutLog() {}
 
     /**
      *Service层添加操作切点
@@ -45,18 +59,66 @@ public class LogAspect {
     /**
      *Service层删除操作切点
      */
-    @Pointcut(value = "execution(public * com.ice.agile.anagile.service..impl.*ServiceImpl.del*(..))")
+    @Pointcut(value = "execution(public * com.ice.agile.anagile.service..impl.*ServiceImpl.delete*(..))")
     private void serviceDeleteLog() {}
+
+    /**
+     * 登录操作日志
+     * @param joinPoint 连接点
+     * @param object    object
+     */
+    @AfterReturning(value = "controllerLoginLog()", argNames = "joinPoint,object", returning = "object")
+    public void loginLog(JoinPoint joinPoint, Object object) {
+        takeLog(joinPoint, Constant.ActionType.ACTION_LOGIN);
+    }
+
+    //
+    @AfterReturning(value = "controllerLogoutLog()", argNames = "joinPoint,object", returning = "object")
+    public void logoutLog(JoinPoint joinPoint, Object object) {
+        takeLog(joinPoint, Constant.ActionType.ACTION_LOGOUT);
+    }
 
 
     /**
      * 添加操作日志
-     * @param joinPoint
-     * @param object
+     * @param joinPoint 连接点
+     * @param object    object
      */
     @AfterReturning(value = "serviceSaveLog()", argNames = "joinPoint,object", returning = "object")
     public void insertLog(JoinPoint joinPoint, Object object) {
+        takeLog(joinPoint, Constant.ActionType.ACTION_SAVE);
+    }
 
+    /**
+     * 修改操作日志
+     * @param joinPoint 连接点
+     * @param object    object
+     */
+    @AfterReturning(value = "serviceUpdateLog()", argNames = "joinPoint,object", returning = "object")
+    public void updateLog(JoinPoint joinPoint, Object object) {
+        takeLog(joinPoint, Constant.ActionType.ACTION_UPDATE);
+    }
+
+
+    /**
+     * 删除操作日志
+     * @param joinPoint 连接点
+     * @param object    object
+     */
+    @AfterReturning(value = "serviceDeleteLog()", argNames = "joinPoint,object", returning = "object")
+    public void deleteLog(JoinPoint joinPoint, Object object){
+        takeLog(joinPoint,Constant.ActionType.ACTION_DELETE);
+    }
+
+
+
+
+    /**
+     * 记录添加、修改、删除日志方法
+     * @param joinPoint 连接点
+     * @param actionType    操作类型
+     */
+    private void takeLog(JoinPoint joinPoint, Integer actionType) {
         //判断参数
         if (joinPoint.getArgs() == null) { // 没有参数
             return;
@@ -77,19 +139,19 @@ public class LogAspect {
         //记录日志
         SysUser currentUser = AppUser.getCurrentUser();//获取当前操作的用户信息
         if (currentUser != null) {
-            SystemActionLogger log = new SystemActionLogger();
+            SysActionLogger log = new SysActionLogger();
             log.setUserId(currentUser.getId());//用户id
             log.setUsername(currentUser.getUsername());//用户名
             log.setIp(currentUser.getLoginIp());//用户登录ip
-            log.setActionType(Constant.ActionType.ACTION_SAVE);//操作类型
+            log.setActionType(actionType);//操作类型
             log.setActionMenu(actionMenu);//操作模块
             log.setActionDesc(getActionDesc(joinPoint.getArgs(),targetMethod.getName()));//操作描述
             log.setActionTime(new Timestamp(new Date().getTime()));
             log.setLoginType(Constant.LoginType.PC);//登录类型  0：pc  1：手机
-            System.out.println(log.toString());
+            sysActionLoggerService.insert(log);
         }
-
     }
+
 
 
     /**
@@ -127,6 +189,9 @@ public class LogAspect {
                 Object reValue;
                 try {
                     reValue = method.invoke(info);
+                    if (methodName.contains("getPassword")) {
+                        reValue = "******";
+                    }
                 } catch (Exception e) {
                     continue;
                 }
@@ -138,6 +203,7 @@ public class LogAspect {
             sb.append("]");
             index++ ;
         }
+        System.out.println(sb.toString().length());
         return sb.toString();
     }
 

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ice.agile.anagile.mapper.system.SysActionLoggerMapper" >
+  <resultMap id="BaseResultMap" type="com.ice.agile.anagile.entity.system.SysActionLogger" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="username" property="username" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="ip" property="ip" jdbcType="VARCHAR" />
+    <result column="action_type" property="actionType" jdbcType="INTEGER" />
+    <result column="login_type" property="loginType" jdbcType="INTEGER" />
+    <result column="action_menu" property="actionMenu" jdbcType="VARCHAR" />
+    <result column="action_desc" property="actionDesc" jdbcType="VARCHAR" />
+    <result column="action_time" property="actionTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, username, user_id, ip, action_type, login_type, action_menu, action_desc, action_time
+  </sql>
+  <sql id="where">
+      <where>
+          <if test="username != null and username != ''">
+              AND username = #{username}
+          </if>
+          <if test="actionTime != null">
+              AND action_time >= #{action_time}
+          </if>
+      </where>
+  </sql>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_action_logger
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from sys_action_logger
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ice.agile.anagile.entity.system.SysActionLogger" >
+    insert into sys_action_logger (id, username, user_id, 
+      ip, action_type, login_type, 
+      action_menu, action_desc, action_time
+      )
+    values (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}, 
+      #{ip,jdbcType=VARCHAR}, #{actionType,jdbcType=INTEGER}, #{loginType,jdbcType=INTEGER}, 
+      #{actionMenu,jdbcType=VARCHAR}, #{actionDesc,jdbcType=VARCHAR}, #{actionTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <select id="selectByQuery" resultMap="BaseResultMap" parameterType="com.ice.agile.anagile.entity.system.SysActionLogger">
+      SELECT
+      <include refid="Base_Column_List" />
+      FROM sys_action_logger
+      <include refid="where"/>
+      ORDER BY action_time DESC
+  </select>
+</mapper>

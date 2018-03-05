@@ -27,6 +27,12 @@ public class SysUserController {
     @Autowired
     private SysUserService sysUserService;
 
+    /**
+     * 登录
+     * @param user 用户
+     * @param request request
+     * @return 登录结果
+     */
     @PostMapping(value = "/login")
     public ResultVO login(SysUser user, HttpServletRequest request) {
         SysUser currentUser = sysUserService.findById(user.getId());
@@ -37,6 +43,19 @@ public class SysUserController {
         currentUser.setLoginIp(HttpIpUtil.getRequestIp(request));
         request.getSession().setAttribute("currentUser", currentUser);
         return ResultUtil.success("登录成功");
+    }
+
+    /**
+     * 退出
+     * @param request request
+     */
+    @GetMapping(value = "/logout")
+    public void logout(HttpServletRequest request){
+        SysUser currentUser = (SysUser) request.getSession().getAttribute("currentUser");
+        currentUser.setLastLoginIp(currentUser.getLoginIp());
+        currentUser.setLostLoginTime(currentUser.getLoginTime());
+        request.getSession().removeAttribute("currentUser");
+        sysUserService.update(currentUser);
     }
 
     @GetMapping(value = "/getUser")
@@ -61,7 +80,7 @@ public class SysUserController {
         System.out.println(sysUser.getName());
         System.out.println(sysUser.getPhone());
         //sysUser.setPhone("12345678910");
-        return sysUserService.queryList(sysUser);
+        return sysUserService.findList(sysUser);
     }
 
 

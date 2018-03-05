@@ -37,7 +37,7 @@
     from sys_user
     where id = #{id,jdbcType=INTEGER}
   </select>
-  <select id="queryByParams" resultMap="BaseResultMap" parameterType="com.ice.agile.anagile.entity.system.SysUser">
+  <select id="selectByQuery" resultMap="BaseResultMap" parameterType="com.ice.agile.anagile.entity.system.SysUser">
     SELECT
     <include refid="Base_Column_List" />
     FROM sys_user

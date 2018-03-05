@@ -11,7 +11,7 @@ import java.util.Date;
  * 2018/3/2 11:55
  */
 @Data
-public class SystemActionLogger implements Serializable {
+public class SysActionLogger implements Serializable {
     private static final long serialVersionUID = 8458105046827771790L;
     /** 主键id. */
     private Integer id;
@@ -25,7 +25,7 @@ public class SystemActionLogger implements Serializable {
     /** 用户登录Ip. */
     private String ip;
 
-    /** 操作类型 10-登录  11-退出 12-添加 13-删除 14-修改 15-查询 . */
+    /** 操作类型 0-登录  1-退出 2-添加 3-删除 4-修改 5-查询 . */
     private Integer actionType;
 
     /** 操作模块. */
@@ -37,7 +37,7 @@ public class SystemActionLogger implements Serializable {
     /** 登录类型 0 pc登录  1手机登录. */
     private Integer loginType;
 
-    /** 操作时间 0 pc登录  1手机登录. */
+    /** 操作时间. */
     private Date actionTime;
 
 

@@ -10,7 +10,7 @@ import java.util.List;
  */
 public interface SysUserService {
 
-    List<SysUser> queryList(SysUser user);
+    List<SysUser> findList(SysUser user);
 
     SysUser findById(Integer id);
 

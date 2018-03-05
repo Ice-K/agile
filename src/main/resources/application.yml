@@ -8,8 +8,8 @@ server:
 
 # myBatis配置
 mybatis:
-  mapper-locations: classpath:com/ice/agile/anagile/**/*Mapper.xml
-  type-aliases-package: com.ice.agile.anagile.*.entity
+  mapper-locations: classpath:com/ice/agile/anagile/mapper/**/*Mapper.xml
+  type-aliases-package: com.ice.agile.anagile.entity
   config-location: classpath:mybatis-config.xml
 
 # pagehelper分页插件

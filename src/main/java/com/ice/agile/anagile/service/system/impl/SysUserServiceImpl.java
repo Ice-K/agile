@@ -26,9 +26,9 @@ public class SysUserServiceImpl implements SysUserService {
     private SysUserMapper sysUserMapper;
 
     @Override
-    public List<SysUser> queryList(SysUser user) {
+    public List<SysUser> findList(SysUser user) {
         PageHelper.startPage(1,5);
-        return sysUserMapper.queryByParams(user);
+        return sysUserMapper.selectByQuery(user);
     }
 
     @Override
