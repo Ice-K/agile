@@ -12,8 +12,9 @@ mybatis:
   type-aliases-package: com.ice.agile.anagile.entity
   config-location: classpath:mybatis-config.xml
 
-# pagehelper分页插件
 
+
+# pagehelper分页插件 配置失效在configuration文件夹MybatisConfig类中配置
 #pagehelper:
 #  helper-dialect: mysql
 #  params: count=countSql
@@ -27,7 +28,7 @@ spring:
   datasource:
     # JDBC配置
     username: root
-    password:
+    password: root
     url: jdbc:mysql://localhost:3306/agile?useUnicode=true&useSSL=true&characterEncoding=UTF-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
     # 使用druid数据源
     type: com.alibaba.druid.pool.DruidDataSource
@@ -58,14 +59,23 @@ spring:
         url-pattern: /druid/*
         reset-enable: false
         allow: 127.0.0.1      #IP白名单
-        deny: 192.168.0.38
+        deny: 192.168.0.38j   #IP黑名单 两者相同时，allow优先
 
       #spring 监控配置 c.i.a.s.mapper* 必须配置spring.aop.proxy-target-class=true
       #aop-patterns:
 
+  #事务代理模式有两种:java自带的动态代理模式和cglib代理模式(true)
+  aop:
+    proxy-target-class: true
+
+
+
+
+  #时间显示格式
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT
+
 
 #    # 连接池的补充设置，应用到上面所有数据源中
 #    # 初始化大小，最小，最大
@@ -101,9 +111,7 @@ spring:
     #hibernate.format_sql=true
 
 
-  #事务代理模式有两种:java自带的动态代理模式和cglib代理模式(true)
-  aop:
-    proxy-target-class: true
+
 
 # 配置控制台打印sql 针对mybatis
 logging:

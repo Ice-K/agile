@@ -54,6 +54,7 @@ public class SysUserServiceImpl implements SysUserService {
         if (user == null) {
             throw new MyExecption(CodeEnums.PARAM_ISNOLL.getCode(), "user = " + null);
         }
+        //初始密码123456
         user.setPassword(MD5Util.generate(PropertiesUtil.getProperty("defaultPwd")));
         user.setCreateUser(AppUser.getCurrentUser().getUsername());
         int result = sysUserMapper.insert(user);
@@ -75,8 +76,6 @@ public class SysUserServiceImpl implements SysUserService {
         if (user == null) {
             throw new MyExecption(CodeEnums.PARAM_ISNOLL.getCode(), "user = " + null);
         }
-        Integer i = null;
-        i++;
         int result = sysUserMapper.updateById(user);
         if (result == 0) {
             throw new MyExecption(CodeEnums.RESULT_ERROR.getCode(), "用户不存在");

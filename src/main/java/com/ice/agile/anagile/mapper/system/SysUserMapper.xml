@@ -119,10 +119,10 @@
               login_time = #{loginTime, jdbcType=TIMESTAMP},
           </if>
           <if test="isLock != null">
-              is_lock = #{isLock, jdbcType=INTEGER}
+              is_lock = #{isLock, jdbcType=INTEGER},
           </if>
           <if test="isDel != null">
-              is_del = #{isDel, jdbcType=INTEGER}
+              is_del = #{isDel, jdbcType=INTEGER},
           </if>
           <if test="createTime != null">
               create_time = #{createTime,jdbcType=TIMESTAMP},
