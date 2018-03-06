@@ -12,9 +12,12 @@ public interface SysUserMapper {
 
     SysUser selectById(Integer id);
 
+    SysUser selectByUsername(String username);
+
     List<SysUser> selectByQuery(SysUser user);
 
     int updateById(SysUser user);
 
     int deleteById(Integer id);
+
 }

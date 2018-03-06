@@ -34,14 +34,14 @@ public class LogAspect {
     /**
      * 登录操作切点
      */
-    @Pointcut(value = "execution(public * com.ice.agile.anagile.controller..login(..))")
-    private void controllerLoginLog() {}
+    @Pointcut(value = "execution(public * com.ice.agile.anagile.service.system.impl.SysLoginServiceImpl.login(..))")
+    private void loginLog() {}
 
     /**
      * 退出操作切点
      */
-    @Pointcut(value = "execution(public * com.ice.agile.anagile.controller..loginout(..))")
-    private void controllerLogoutLog() {}
+    @Pointcut(value = "execution(public * com.ice.agile.anagile.service.system.impl.SysLoginServiceImpl.logout(..))")
+    private void logoutLog() {}
 
     /**
      *Service层添加操作切点
@@ -67,13 +67,13 @@ public class LogAspect {
      * @param joinPoint 连接点
      * @param object    object
      */
-    @AfterReturning(value = "controllerLoginLog()", argNames = "joinPoint,object", returning = "object")
+    @AfterReturning(value = "loginLog()", argNames = "joinPoint,object", returning = "object")
     public void loginLog(JoinPoint joinPoint, Object object) {
         takeLog(joinPoint, Constant.ActionType.ACTION_LOGIN);
     }
 
     //
-    @AfterReturning(value = "controllerLogoutLog()", argNames = "joinPoint,object", returning = "object")
+    @AfterReturning(value = "logoutLog()", argNames = "joinPoint,object", returning = "object")
     public void logoutLog(JoinPoint joinPoint, Object object) {
         takeLog(joinPoint, Constant.ActionType.ACTION_LOGOUT);
     }
@@ -146,6 +146,9 @@ public class LogAspect {
             log.setActionType(actionType);//操作类型
             log.setActionMenu(actionMenu);//操作模块
             log.setActionDesc(getActionDesc(joinPoint.getArgs(),targetMethod.getName()));//操作描述
+            if (actionType.equals(Constant.ActionType.ACTION_LOGIN)) {
+                log.setActionDesc(null);
+            }
             log.setActionTime(new Timestamp(new Date().getTime()));
             log.setLoginType(Constant.LoginType.PC);//登录类型  0：pc  1：手机
             sysActionLoggerService.insert(log);

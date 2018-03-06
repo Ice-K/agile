@@ -7,10 +7,12 @@ import com.ice.agile.anagile.mapper.system.SysUserMapper;
 import com.ice.agile.anagile.service.system.SysUserService;
 import com.ice.agile.annotation.AutomaticLog;
 import com.ice.agile.execption.MyExecption;
+import com.ice.agile.utils.AppUser;
+import com.ice.agile.utils.MD5Util;
+import com.ice.agile.utils.PropertiesUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -25,6 +27,9 @@ public class SysUserServiceImpl implements SysUserService {
     @Autowired
     private SysUserMapper sysUserMapper;
 
+
+
+
     @Override
     public List<SysUser> findList(SysUser user) {
         PageHelper.startPage(1,5);
@@ -33,16 +38,29 @@ public class SysUserServiceImpl implements SysUserService {
 
     @Override
     public SysUser findById(Integer id) {
-        if (StringUtils.isEmpty(id)) {
+        if (id == null) {
             throw new MyExecption(CodeEnums.PARAM_ISNOLL.getCode(),"id不能为空");
         }
-        return sysUserMapper.selectById(id);
+        SysUser user = sysUserMapper.selectById(id);
+        if (user == null) {
+            throw new MyExecption(CodeEnums.RESULT_ERROR.getCode(), "用户不存在");
+        }
+        return user;
     }
 
     @Override
     @Transactional
     public int save(SysUser user) {
-        return sysUserMapper.insert(user);
+        if (user == null) {
+            throw new MyExecption(CodeEnums.PARAM_ISNOLL.getCode(), "user = " + null);
+        }
+        user.setPassword(MD5Util.generate(PropertiesUtil.getProperty("defaultPwd")));
+        user.setCreateUser(AppUser.getCurrentUser().getUsername());
+        int result = sysUserMapper.insert(user);
+        if (result != 1) {
+            throw new MyExecption(CodeEnums.RESULT_ERROR.getCode(), "添加失败");
+        }
+        return result;
     }
 
     @Override
@@ -54,6 +72,15 @@ public class SysUserServiceImpl implements SysUserService {
     @Override
     @Transactional
     public int update(SysUser user) {
-        return sysUserMapper.updateById(user);
+        if (user == null) {
+            throw new MyExecption(CodeEnums.PARAM_ISNOLL.getCode(), "user = " + null);
+        }
+        Integer i = null;
+        i++;
+        int result = sysUserMapper.updateById(user);
+        if (result == 0) {
+            throw new MyExecption(CodeEnums.RESULT_ERROR.getCode(), "用户不存在");
+        }
+        return result;
     }
 }

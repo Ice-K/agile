@@ -1,25 +1,33 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.ice.agile.anagile.mapper.system.SysUserMapper" >
-  <resultMap id="BaseResultMap" type="com.ice.agile.anagile.entity.system.SysUser" >
-    <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="pid" property="pid" jdbcType="INTEGER" />
-    <result column="username" property="username" jdbcType="VARCHAR" />
-    <result column="password" property="password" jdbcType="VARCHAR" />
-    <result column="name" property="name" jdbcType="VARCHAR" />
-    <result column="phone" property="phone" jdbcType="CHAR" />
-    <result column="deptment_id" property="deptmentId" jdbcType="INTEGER" />
-    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
-    <result column="create_user" property="createUser" jdbcType="VARCHAR" />
-    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
-    <result column="update_user" property="updateUser" jdbcType="VARCHAR" />
+    <resultMap id="BaseResultMap" type="com.ice.agile.anagile.entity.system.SysUser" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="pid" property="pid" jdbcType="INTEGER" />
+        <result column="username" property="username" jdbcType="VARCHAR" />
+        <result column="password" property="password" jdbcType="VARCHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="phone" property="phone" jdbcType="CHAR" />
+        <result column="deptment_id" property="deptmentId" jdbcType="INTEGER" />
+        <result column="last_login_ip" property="lastLoginIp" jdbcType="VARCHAR" />
+        <result column="login_ip" property="loginIp" jdbcType="VARCHAR" />
+        <result column="last_login_time" property="lastLoginTime" jdbcType="TIMESTAMP" />
+        <result column="login_time" property="loginTime" jdbcType="TIMESTAMP" />
+        <result column="is_lock" property="isLock" jdbcType="INTEGER" />
+        <result column="is_del" property="isDel" jdbcType="INTEGER" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="create_user" property="createUser" jdbcType="VARCHAR" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="update_user" property="updateUser" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, pid, username, password, name, phone, deptment_id, create_time, create_user, 
-    update_time, update_user
+    id, pid, username, password, name, phone, deptment_id,
+    last_login_ip, login_ip, last_login_time, login_time,
+    is_lock, is_del, create_time, create_user, update_time, update_user
   </sql>
   <sql id="where">
     <where>
+        is_del = 0
       <if test="phone != null and phone != ''">
         AND phone = #{phone}
       </if>
@@ -35,7 +43,13 @@
     select 
     <include refid="Base_Column_List" />
     from sys_user
-    where id = #{id,jdbcType=INTEGER}
+    where is_del = 0 AND id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectByUsername" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from sys_user
+    where is_del = 0 AND username = #{username,jdbcType=VARCHAR}
   </select>
   <select id="selectByQuery" resultMap="BaseResultMap" parameterType="com.ice.agile.anagile.entity.system.SysUser">
     SELECT
@@ -49,27 +63,80 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.ice.agile.anagile.entity.system.SysUser" >
-    insert into sys_user (id, pid, username, 
-      password, name, phone, 
-      deptment_id, create_time, create_user, 
-      update_time, update_user)
-    values (#{id,jdbcType=INTEGER}, #{pid,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, 
-      #{password,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{phone,jdbcType=CHAR}, 
-      #{deptmentId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR},
-      #{updateTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR})
+    insert into sys_user (
+      id, pid,
+      username, password,
+      name, phone,
+      last_login_ip, login_ip,
+      last_login_time, login_time,
+      is_lock, deptment_id,
+      create_time, create_user,
+      update_time, update_user,
+      is_del
+      ) values (
+      #{id,jdbcType=INTEGER}, #{pid,jdbcType=INTEGER},
+      #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},
+      #{name,jdbcType=VARCHAR}, #{phone,jdbcType=CHAR},
+      #{lastLoginIp, jdbcType=VARCHAR}, #{loginIp, jdbcType=VARCHAR},
+      #{lastLoginTime, jdbcType=TIMESTAMP}, #{loginTime, jdbcType=TIMESTAMP},
+      0, #{deptmentId,jdbcType=INTEGER},
+      #{createTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR},
+      #{updateTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR},
+      0)
   </insert>
 
   <update id="updateById" parameterType="com.ice.agile.anagile.entity.system.SysUser" >
     update sys_user
-    set pid = #{pid,jdbcType=INTEGER},
-      username = #{username,jdbcType=VARCHAR},
-      password = #{password,jdbcType=VARCHAR},
-      name = #{name,jdbcType=VARCHAR},
-      phone = #{phone,jdbcType=CHAR},
-      deptment_id = #{deptmentId,jdbcType=INTEGER},
-      create_user = #{createUser,jdbcType=VARCHAR},
-      update_time = #{updateTime,jdbcType=TIMESTAMP},
-      update_user = #{updateUser,jdbcType=VARCHAR}
-    where id = #{id,jdbcType=INTEGER}
+      <set>
+          <if test="pid != null">
+              pid = #{pid,jdbcType=INTEGER},
+          </if>
+          <if test="username != null">
+              username = #{username,jdbcType=VARCHAR},
+          </if>
+          <if test="password != null">
+              password = #{password,jdbcType=VARCHAR},
+          </if>
+          <if test="name != null">
+              name = #{name,jdbcType=VARCHAR},
+          </if>
+          <if test="phone != null">
+              phone = #{phone,jdbcType=CHAR},
+          </if>
+          <if test="deptmentId != null">
+              deptment_id = #{deptmentId,jdbcType=CHAR},
+          </if>
+          <if test="lastLoginIp != null">
+              last_login_ip = #{lastLoginIp, jdbcType=VARCHAR},
+          </if>
+          <if test="loginIp != null">
+              login_ip = #{loginIp, jdbcType=VARCHAR},
+          </if>
+          <if test="lastLoginTime != null">
+              last_login_time = #{lastLoginTime, jdbcType=TIMESTAMP},
+          </if>
+          <if test="loginTime != null">
+              login_time = #{loginTime, jdbcType=TIMESTAMP},
+          </if>
+          <if test="isLock != null">
+              is_lock = #{isLock, jdbcType=INTEGER}
+          </if>
+          <if test="isDel != null">
+              is_del = #{isDel, jdbcType=INTEGER}
+          </if>
+          <if test="createTime != null">
+              create_time = #{createTime,jdbcType=TIMESTAMP},
+          </if>
+          <if test="createUser != null">
+              create_user = #{createUser,jdbcType=VARCHAR},
+          </if>
+          <if test="updateTime != null">
+              update_time = #{updateTime,jdbcType=TIMESTAMP},
+          </if>
+          <if test="updateUser != null">
+              update_user = #{updateUser,jdbcType=VARCHAR},
+          </if>
+      </set>
+    where is_del = 0 AND id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

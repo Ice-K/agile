@@ -1,10 +1,12 @@
 package com.ice.agile.anagile.common.base;
 
+import com.ice.agile.anagile.common.enums.CodeEnums;
 import com.ice.agile.anagile.common.vo.ResultVO;
 import com.ice.agile.configuration.DateAndTimestampConfig.CustomTimestampEditor;
 import com.ice.agile.configuration.DateAndTimestampConfig.StringEscapeEditor;
 import com.ice.agile.execption.MyExecption;
 import com.ice.agile.utils.ResultUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -12,6 +14,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -30,6 +34,7 @@ import java.util.Date;
  * 2018/2/28 18:57
  */
 @ControllerAdvice
+@Slf4j
 public class BaseController {
     @InitBinder
     public void initBinder(WebDataBinder binder) {
@@ -57,7 +62,11 @@ public class BaseController {
             MyExecption execption = (MyExecption) e;
             return ResultUtil.error(execption.getCode(),execption.getMessage());
         } else {
-            return ResultUtil.error(-1, "未知错误");
+            //将异常信息记录日志，error日志
+            StringWriter trace = new StringWriter();
+            e.printStackTrace(new PrintWriter(trace));
+            log.error(trace.toString());
+            return ResultUtil.error(CodeEnums.RESULT_SYS_ERROR.getCode(), "系统异常");
         }
     }
 }
