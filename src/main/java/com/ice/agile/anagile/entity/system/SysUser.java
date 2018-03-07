@@ -4,7 +4,7 @@ import com.ice.agile.anagile.common.base.BaseEntity;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.sql.Timestamp;
 
 /**
  * Cteated by wangpeng
@@ -23,8 +23,8 @@ public class SysUser extends BaseEntity implements Serializable {
     private Integer deptmentId; //部门id
     private String lastLoginIp; //上次登录ip
     private String loginIp;     //当前登录ip
-    private Date lastLoginTime; //上次登录时间
-    private Date loginTime;     //当前登录时间
+    private Timestamp lastLoginTime; //上次登录时间
+    private Timestamp loginTime;     //当前登录时间
     private Integer isLock; //是否锁定：0正常 1锁定
 
 }

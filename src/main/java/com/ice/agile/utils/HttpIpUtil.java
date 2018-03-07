@@ -21,7 +21,7 @@ public class HttpIpUtil {
 
     /**
      * 通过请求获取id地址
-     * @param request httprequest
+     * @param request HttpServletRequest
      * @return  ip
      */
     public static String getRequestIp(HttpServletRequest request) {

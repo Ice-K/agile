@@ -10,6 +10,7 @@ import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,9 +73,12 @@ public class LogAspect {
         takeLog(joinPoint, Constant.ActionType.ACTION_LOGIN);
     }
 
-    //
-    @AfterReturning(value = "logoutLog()", argNames = "joinPoint,object", returning = "object")
-    public void logoutLog(JoinPoint joinPoint, Object object) {
+    /**
+     * 退出操作日志
+     * @param joinPoint
+     */
+    @Before(value = "logoutLog()", argNames = "joinPoint")
+    public void logoutLog(JoinPoint joinPoint) {
         takeLog(joinPoint, Constant.ActionType.ACTION_LOGOUT);
     }
 
@@ -146,9 +150,6 @@ public class LogAspect {
             log.setActionType(actionType);//操作类型
             log.setActionMenu(actionMenu);//操作模块
             log.setActionDesc(getActionDesc(joinPoint.getArgs(),targetMethod.getName()));//操作描述
-            if (actionType.equals(Constant.ActionType.ACTION_LOGIN)) {
-                log.setActionDesc(null);
-            }
             log.setActionTime(new Timestamp(new Date().getTime()));
             log.setLoginType(Constant.LoginType.PC);//登录类型  0：pc  1：手机
             sysActionLoggerService.insert(log);
@@ -175,11 +176,15 @@ public class LogAspect {
         String className;
         int index = 1;
         //1.便利参数对象
+        sb.append("[");
         for (Object info : args) {
             //2.获取对象类型
             className = info.getClass().getName();
             className = info.getClass().getName().substring(className.lastIndexOf(".")+1);
-            sb.append("[参数").append(index).append("，类型：").append(className).append("，值：");
+            if (className.equals("RequestFacade")) {//如果参数类型为RequestFacade，说明参数为HttpServletRequest 则不记录
+                continue;
+            }
+            sb.append("{\"参数\":\"").append(index).append("\",\"类型\":\"").append(className).append("\",\"值\":{");
             //3.获取对象所有的方法
             Method[] methods = info.getClass().getDeclaredMethods();
             //4.遍历对象的方法，判断是不是get方法
@@ -188,6 +193,7 @@ public class LogAspect {
                 if (!methodName.contains("get")) {//不是get方法
                     continue;//执行下一次循环
                 }
+
                 //5.获取值
                 Object reValue;
                 try {
@@ -200,14 +206,14 @@ public class LogAspect {
                 }
 
                 if (null != reValue) {
-                    sb.append("(").append(methodName).append("：").append(reValue).append(")");
+                    sb.append("\"").append(methodName).append("\":\"").append(reValue).append("\"");
                 }
             }
-            sb.append("]");
+            sb.append("}");
             index++ ;
         }
-        System.out.println(sb.toString().length());
-        return sb.toString();
+        sb.append("}]");
+        return sb.toString().replace("}{","},{").replace("\"\"","\",\"");
     }
 
 
