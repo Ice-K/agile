@@ -75,7 +75,7 @@ public class LogAspect {
 
     /**
      * 退出操作日志
-     * @param joinPoint
+     * @param joinPoint 连接点
      */
     @Before(value = "logoutLog()", argNames = "joinPoint")
     public void logoutLog(JoinPoint joinPoint) {
